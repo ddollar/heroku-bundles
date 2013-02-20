@@ -18,3 +18,14 @@ Your app's current config will be exported into a `.env` file in the bundle.
     Exporting example...
     Downloading: 100.0% (ETA: 0s)
     Exported to example.tgz
+
+    $ heroku apps:import example.tgz -a example-new
+    Importing example.tgz...
+    Uploading: 100.0%
+    Replace HEROKU_POSTGRESQL_WHITE_URL with heroku-postgresql? [y/N] y
+    Available heroku-postgresql plans:
+      dev basic crane kappa ronin fugu ika zilla baku mecha
+    Choose a plan [dev]: crane
+    Adding heroku-postgresql:crane to example-new... done, $50/mo
+    Replace OPENREDIS_URL with openredis: [y/N] n
+    Imported to example-new
