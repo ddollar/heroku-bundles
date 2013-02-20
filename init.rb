@@ -35,7 +35,6 @@ class Heroku::Command::Apps < Heroku::Command::Base
     config  = api.get_config_vars(app).body
 
     puts "Exporting #{app}..."
-
     download_file slug, "bundle.tgz"
     inject_env config, "bundle.tgz"
     puts "Exported to " + File.expand_path(filename)
