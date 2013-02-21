@@ -1,9 +1,11 @@
 $:.unshift File.expand_path("../vendor/minitar/lib", __FILE__)
 $:.unshift File.expand_path("../vendor/progress/lib", __FILE__)
 
-require "zlib"
 require "archive/tar/minitar"
+require "net/http"
+require "net/https"
 require "progress"
+require "zlib"
 
 class Heroku::API
   def get_release_slug(app)
