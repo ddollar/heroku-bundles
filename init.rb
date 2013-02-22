@@ -48,13 +48,19 @@ class Heroku::Command::Apps < Heroku::Command::Base
   # clone an app to NEWNAME
   #
   # -r, --region REGION  # specify region for this app to run on
+  # -t, --tier TIER      # specify a tier for this app
   #
   def clone
     name_new = shift_argument || error("must specify NEWNAME")
     name_old = app
 
     action("Creating #{name_new}") do
-      app = api.post_app({ :name => name_new, :stack => "cedar", :region => options[:region] })
+      app = api.post_app({
+        :name   => name_new,
+        :stack  => "cedar",
+        :region => options[:region],
+        :tier   => options[:tier]
+      })
     end
 
     Dir.mktmpdir do |dir|
