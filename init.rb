@@ -74,7 +74,7 @@ class Heroku::Command::Apps < Heroku::Command::Base
 private
 
   def bundle(app)
-    RestClient::Resource.new bundle_host, "", Heroku::Auth.api_key
+    RestClient::Resource.new bundle_host, "", Heroku::Auth.password
   end
 
   def upload_bundle(app, filename)
@@ -102,7 +102,7 @@ private
 
     req = Net::HTTP::Get.new uri.request_uri
 
-    req.basic_auth "", Heroku::Auth.api_key
+    req.basic_auth "", Heroku::Auth.password
 
     print "Creating bundle for #{app}... "
 
