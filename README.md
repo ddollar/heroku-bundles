@@ -14,6 +14,13 @@ Your app's current config will be exported into a `.env` file in the bundle.
 
 ## Usage
 
+    $ heroku apps:clone -a example example-new
+    Creating example-new... done
+    Creating bundle for example... done
+    Downloading: 100.0%
+    Uploading bundle... done, v4
+    Cloned example to example-new
+
     $ heroku apps:export -a example
     Exporting example...
     Downloading: 100.0% (ETA: 0s)
