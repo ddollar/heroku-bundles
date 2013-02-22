@@ -4,6 +4,7 @@ require "cgi"
 require "net/http"
 require "net/https"
 require "progress"
+require "tmpdir"
 require "zlib"
 
 class Heroku::API
@@ -40,6 +41,28 @@ class Heroku::Command::Apps < Heroku::Command::Base
 
     download_bundle app, filename
     puts "Exported to " + File.expand_path(filename)
+  end
+
+  # apps:clone NEWNAME
+  #
+  # clone an app to NEWNAME
+  #
+  # -r, --region REGION  # specify region for this app to run on
+  #
+  def clone
+    name_new = shift_argument || error("must specify NEWNAME")
+    name_old = app
+
+    action("Creating #{name_new}") do
+      app = api.post_app({ :name => name_new, :stack => "cedar", :region => options[:region] })
+    end
+
+    Dir.mktmpdir do |dir|
+      download_bundle name_old, "#{dir}/bundle.tgz"
+      upload_bundle name_new, "#{dir}/bundle.tgz"
+    end
+
+    puts "Copied #{name_old} to #{name_new}"
   end
 
 private
