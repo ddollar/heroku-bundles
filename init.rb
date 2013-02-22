@@ -1,7 +1,5 @@
-$:.unshift File.expand_path("../vendor/minitar/lib", __FILE__)
 $:.unshift File.expand_path("../vendor/progress/lib", __FILE__)
 
-require "archive/tar/minitar"
 require "cgi"
 require "net/http"
 require "net/https"
