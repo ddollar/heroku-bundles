@@ -18,6 +18,18 @@ end
 
 class Heroku::Command::Apps < Heroku::Command::Base
 
+  # apps:import FILENAME
+  #
+  # import an app
+  #
+  def import
+    filename = shift_argument || error("must specify FILENAME")
+    validate_arguments!
+
+    upload_bundle app, filename
+    puts "Imported to #{app}"
+  end
+
   # apps:export FILENAME
   #
   # export an app
@@ -32,9 +44,26 @@ class Heroku::Command::Apps < Heroku::Command::Base
 
 private
 
+  def bundle(app)
+    RestClient::Resource.new bundle_host, "", Heroku::Auth.api_key
+  end
+
+  def upload_bundle(app, filename)
+    action("Uploading bundle") do
+      res = bundle(app)["/apps/#{app}/bundle"].post(
+        :bundle => File.open(filename, "rb"),
+        :description => "Imported from #{File.basename(filename)}",
+        :user => Heroku::Auth.user
+      )
+      status json_decode(res.body)["release"]
+    end
+  rescue RestClient::Forbidden => ex
+    error ex.http_body
+  end
+
   def download_bundle(app, filename)
     file = File.open(filename, "wb")
-    uri  = URI.parse(slug_converter_url(app))
+    uri  = URI.parse("#{bundle_host}/apps/#{app}/bundle")
     http = Net::HTTP.new(uri.host, uri.port)
 
     if uri.scheme == "https"
@@ -68,9 +97,8 @@ private
     file.close
   end
 
-  def slug_converter_url(app)
-    host = ENV["SLUG_CONVERTER_HOST"] || "https://bundle-builder.herokuapp.com"
-    "#{host}/apps/#{app}/bundle.tgz"
+  def bundle_host
+    ENV["BUNDLE_HOST"] || "https://bundle-builder.herokuapp.com"
   end
 
 end
