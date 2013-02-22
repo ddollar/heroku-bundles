@@ -62,7 +62,7 @@ class Heroku::Command::Apps < Heroku::Command::Base
       upload_bundle name_new, "#{dir}/bundle.tgz"
     end
 
-    puts "Copied #{name_old} to #{name_new}"
+    puts "Cloned #{name_old} to #{name_new}"
   end
 
 private
